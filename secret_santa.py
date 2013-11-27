@@ -1,5 +1,8 @@
 import random
 import pprint
+import smtplib
+from email.mime.text import MIMEText
+
 players = [{'name': 'Paul', 'email': 'pnichols104@gmail.com', 'elf': '', 'exclude':['Jason']},
 		  {'name': 'Jason', 'email': 'jason.b.olsen@gmail.com', 'elf': '', 'exclude':['Paul']},
 		  {'name': 'Matt', 'email': 'matthew.angrisani@gmail.com', 'elf': '', 'exclude':['Emily']},
@@ -28,3 +31,17 @@ def assign_elves():
 			break
 
 assign_elves()
+
+SERVER = 'localhost'
+for player in players:
+	print "%s is the Secret Santa for %s!" %(player['name'], player['elf'])
+	msg = MIMEText("Hello %s!  Merry Christmas!  Your secret elf is %s!" %(player['name'], player['elf']))
+
+msg['From'] = 'pnichols104@gmail.com'
+msg['To'] = 'pnichols104@gmail.com'
+msg['Subject'] = 'Secret Santa'
+
+s = smtplib.SMTP(SERVER, 1025)
+s.sendmail('pnichols104@gmail.com', ['pnichols104@gmail.com'], msg.as_string())
+# import pdb; pdb.set_trace()
+s.quit()
