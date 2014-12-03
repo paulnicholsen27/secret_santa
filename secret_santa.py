@@ -86,6 +86,7 @@ for player in players:
 	part2 = MIMEText(HMTL, 'html')
 	msg.attach(part1)
 	msg.attach(part2)
+	msg['Subject'] = SUBJECT
 	server = smtplib.SMTP('smtp.gmail.com',587) #port 465 or 587
 	server.ehlo()
 	server.starttls()
