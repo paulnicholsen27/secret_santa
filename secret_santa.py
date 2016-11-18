@@ -21,8 +21,6 @@ class Player(object):
 def get_player_info(csv_file):
     with open(csv_file, 'r') as f:
         santareader = csv.DictReader(f)
-        # import ipdb; ipdb.set_trace()
-        # player_info = [{"name": row["Your name"], "email": row["Email"], "allergies": row["Allergies"], "wants": row["Wants"]} for row in santareader]
         player_info = [Player(row["Your name"], row["Email"], row["Allergies"], row["Wants"]) for row in santareader]
     return player_info
 
@@ -31,15 +29,12 @@ print players
 
 def assign_elves():
     elves = random.shuffle([player.name for player in players])
-    import ipdb; ipdb.set_trace()
     for player in players:
         print player
         if player.name != elves[0]:
-            player.elf = elves[0]
-            elves.pop(0)
+            player.elf = elves.pop(0)
         else:
-            player.elf = elves[-1]
-            elves.pop(-1)
+            player.elf = elves.pop(-1)
 
 assign_elves()
 print players
