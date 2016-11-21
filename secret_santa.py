@@ -4,10 +4,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from config import PASSWORD
 import csv
+from string import strip
 
 TESTING = True
 
-santa_path = "/Users/paulnicholsen/Desktop/santa_test.csv"
+santa_path = "/Users/paulnicholsen/Desktop/santa.csv"
 
 
 class Player(object):
@@ -22,7 +23,7 @@ class Player(object):
 def get_player_info(csv_file):
     with open(csv_file, 'r') as f:
         santareader = csv.DictReader(f)
-        player_info = [Player(row["Your name"], row["Email"], row["Allergies"], row["Wants"]) for row in santareader]
+        player_info = [Player(strip(row["Your name"]), strip(row["Email"]), strip(row["Allergies"]), strip(row["Wants"])) for row in santareader]
     return player_info
 
 
@@ -52,12 +53,12 @@ for player in players:
     plain_text_allergies = " "
     plain_text_wants = " "
     if player.elf.allergies:
-        plain_text_allergies = "We know that your elf does not like %s." % player.allergies
-        html_allergies = "We know that your elf does not like <strong>%s</strong>.<br>" % player.allergies
+        plain_text_allergies = "We know that your elf does not like %s." % player.elf.allergies
+        html_allergies = "We know that your elf does not like <strong>%s</strong>.<br>" % player.elf.allergies
 
     if player.elf.wants:
-        plain_text_wants = "We know your elf is a big fan of %s." % player.wants
-        html_wants = "We know your elf is a big fan of <strong>%s</strong></br>." % player.wants
+        plain_text_wants = "We know your elf is a big fan of %s." % player.elf.wants
+        html_wants = "We know your elf is a big fan of <strong>%s</strong></br>." % player.elf.wants
 
     HMTL = """
     <html>
@@ -66,7 +67,7 @@ for player in players:
     <p>
     Hello <strong>%s</strong>!  Happy Holidays!<br><br>
 
-    This year we've decided to play Secret Santa.<br>
+    It's time for Industry Dive's Secret Santa!<br>
     For Secret Santa, please buy a gift for your secret elf, <strong>%s</strong>!
 
     There is a price limit of $20 for Secret Santa gifts.<br><br>
@@ -76,10 +77,12 @@ for player in players:
     %s
 
     Note:  This was sent anonymously so we don't know who has who.<br>
-    PLEASE DO NOT REPLY DIRECTLY TO THIS MESSAGE or you will ruin my Christmas.<br><br>
+    PLEASE DO NOT REPLY DIRECTLY TO THIS MESSAGE or you will ruin Christmas.<br><br>
 
-    Love,<br>
-    Paul
+    If you have any questions, ask Cynthia Bell or Kristin Musulin. <br>
+
+    Happy holidays!<br>
+    
     </p>
     </body>
     </html>
@@ -88,7 +91,7 @@ for player in players:
     TEXT = """
     Hello %s!  Happy Holidays!
 
-    This year we've decided to play Secret Santa.
+    It's time for Industry Dive's Secret Santa!
     For Secret Santa, please buy a gift for your secret elf, %s!
 
     There is a price limit of $20 for Secret Santa gifts.
@@ -100,12 +103,14 @@ for player in players:
     Note:  This was sent anonymously so we don't know who has who.
     PLEASE DO NOT REPLY DIRECTLY TO THIS MESSAGE or you will ruin Christmas.
 
-    Love,
-    Paul
+    If you have any questions, ask Cynthia Bell or Kristin Musulin.
+
+    Happy holidays!
+     
     """ % (player.name, player.elf.name, plain_text_wants, plain_text_allergies)
 
-    FROM = 'pnichols104@gmail.com'
-    TO = 'pnichols104@gmail.com' if TESTING else [player.email]
+    FROM = 'pnicholsen@industrydive.com'
+    TO = 'pnicholsen@industrydive.com' if TESTING else [player.email]
     SUBJECT = 'TEST SECRET SANTA' if TESTING else 'Secret Santa'
 
     msg = MIMEMultipart('alternative')
@@ -118,6 +123,6 @@ for player in players:
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login('pnichols104@gmail.com', PASSWORD)
+    server.login('pnicholsen@industrydive.com', PASSWORD)
     server.sendmail(FROM, TO, msg.as_string())
     server.close()
