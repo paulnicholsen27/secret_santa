@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 
 from config import PASSWORD
 
-TESTING = False
+TESTING = True
 
 santa_path = "/Users/paulnichols/Downloads/santa_test - Sheet1.csv"
 
@@ -57,8 +57,7 @@ def assign_elves(players):
                     return assign_elves(players)
 
 assign_elves(players)
-for player in players:
-    print("{} has {}".format(player.name, player.elf.name))
+
                 
 
 SERVER = 'localhost'
